@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Avengers
+
+    </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <div class="bg">
+      <div class="bg-gradient"></div>
+      <div class="bg-noise"></div>
+      <div class="bg-stars"></div>
+    </div>
+    <header class="header">
+      <div class="brand">
+        <div class="brand-mark">A</div>
+        <div class="brand-text">Avengers</div>
+      </div>
+      <div class="actions">
+        <button id="newChecklistBtn" class="btn cta">New Checklist</button>
+        <button id="themeToggle" class="btn ghost">Theme</button>
+        <button id="resetAll" class="btn danger">Refresh</button>
+      </div>
+    </header>
+    <main class="container">
+      <section id="welcome" class="panel active">
+        <div class="hero">
+          <div class="hero-logo">A</div>
+          <h1 class="hero-title">Avengers</h1>
+          <p class="hero-sub">Your code doesn’t have to be perfect. It just has to be better than yesterday.</p>
+          <button class="btn cta" data-goto="mode">Get Started</button>
+        </div>
+      </section>
+      <section id="mode" class="panel">
+        <h2 class="hero-title" style="text-align:center">Select Module</h2>
+        <div class="module-grid">
+          <div class="module-card" data-goto="checklistTopics">
+            <div class="module-top">
+              <div class="module-icon">📋</div>
+              <div class="mission-ref">REF: STARK-001</div>
+            </div>
+            <div class="module-title">Checklist</div>
+            <div class="module-sub">Plan, prepare, and track engineering quality.</div>
+          </div>
+          <div class="module-card" data-goto="kt">
+            <div class="module-top">
+              <div class="module-icon">🎥</div>
+              <div class="mission-ref">REF: STARK-002</div>
+            </div>
+            <div class="module-title">KT Sessions</div>
+            <div class="module-sub">Create, edit, and manage knowledge transfer.</div>
+          </div>
+        </div>
+      </section>
+      <section id="checklistTopics" class="panel">
+        <div class="row">
+          <button class="btn ghost" data-goto="mode">← Back</button>
+        </div>
+        <h2 class="card-title">Checklist Topics</h2>
+        <div id="topicsGrid" class="grid"></div>
+      </section>
+      <section id="checklist" class="panel">
+        <div class="row">
+          <button class="btn ghost" data-goto="checklistTopics">← Topics</button>
+        </div>
+        <div id="checklistContent" class="grid"></div>
+        <div id="successBanner" class="success hidden">
+          <div class="success-icon">✔</div>
+          <div class="success-text">All checklist items completed</div>
+        </div>
+      </section>
+      <section id="kt" class="panel">
+        <div class="row">
+          <button class="btn ghost" data-goto="mode">← Back</button>
+        </div>
+        <div class="form-card">
+          <h2 class="card-title">Add KT Session</h2>
+          <form id="ktForm" class="form">
+            <div class="field">
+              <label>KT Topic</label>
+              <input type="text" id="ktTopic" required placeholder="Enter topic">
+            </div>
+            <div class="field">
+              <label>Description</label>
+              <textarea id="ktDescription" required placeholder="Brief description"></textarea>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label>Date</label>
+                <input type="date" id="ktDate" required>
+              </div>
+              <div class="field">
+                <label>Time</label>
+                <input type="time" id="ktTime" required>
+              </div>
+            </div>
+            <div class="field">
+              <label>Session URL</label>
+              <input type="url" id="ktUrl" placeholder="https://">
+            </div>
+            <div class="field">
+              <label>Transcript</label>
+              <textarea id="ktTranscript" placeholder="Paste transcript or notes"></textarea>
+            </div>
+            <div class="row">
+              <button type="submit" class="btn primary">Save Session</button>
+              <button type="button" id="clearForm" class="btn ghost">Clear</button>
+            </div>
+          </form>
+        </div>
+        <div>
+          <h2 class="card-title">Sessions</h2>
+          <div id="ktList" class="grid"></div>
+        </div>
+      </section>
+    </main>
+    <dialog id="newChecklistModal" class="modal">
+    <div class="modal-content card">
+      <h3 class="card-title">Add Checklist Heading</h3>
+      <div class="form">
+        <div class="field">
+          <label>Heading Title</label>
+          <input type="text" id="newCheckTitle" placeholder="e.g., Release Readiness">
+        </div>
+        <div class="field">
+          <label>Points (one per line, optional)</label>
+          <textarea id="newCheckPoints" placeholder="Write points, each line becomes a checkbox"></textarea>
+        </div>
+        <div class="row actions-right">
+          <button id="cancelCheckModal" class="btn ghost">Cancel</button>
+          <button id="saveCheckModal" class="btn primary">Add Heading</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+  <div id="confetti"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>
