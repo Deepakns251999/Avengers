@@ -211,6 +211,7 @@ function resetAll() {
 function refreshApp() {
   state.checks = {}
   store.del('checks')
+  store.del('user')
   location.reload()
 }
 function updateCompletion() {
@@ -273,10 +274,16 @@ function updateHeaderVisibility() {
   const show = state.currentPage === 'checklist' || state.currentPage === 'checklistTopics'
   if (btn) btn.style.display = show ? '' : 'none'
 }
+function updateMascotVisibility() {
+  const g = qs('.mascot-group')
+  const show = state.currentPage === 'welcome' || state.currentPage === 'mode'
+  if (g) g.style.display = show ? '' : 'none'
+}
 function goto(panel) {
   state.currentPage = panel
   qsa('.panel').forEach(p => p.classList.toggle('active', p.id === panel))
   updateHeaderVisibility()
+  updateMascotVisibility()
 }
 function renderTopics() {
   const grid = qs('#topicsGrid')
@@ -449,21 +456,19 @@ function renderSessions() {
     desc.textContent = s.description
     const actions = document.createElement('div')
     actions.className = 'kt-actions'
-    const open = document.createElement('a')
-    open.className = 'btn primary'
-    open.textContent = 'Open URL'
-    open.target = '_blank'
-    open.rel = 'noopener noreferrer'
-    open.href = s.url || '#'
+    const view = document.createElement('button')
+    view.className = 'btn primary sm'
+    view.textContent = 'Open'
+    view.addEventListener('click', () => viewSession(i))
     const edit = document.createElement('button')
-    edit.className = 'btn ghost'
+    edit.className = 'btn ghost sm'
     edit.textContent = 'Edit'
     edit.addEventListener('click', () => editSession(i))
     const del = document.createElement('button')
-    del.className = 'btn danger'
+    del.className = 'btn danger sm'
     del.textContent = 'Delete'
     del.addEventListener('click', () => deleteSession(i))
-    actions.appendChild(open)
+    actions.appendChild(view)
     actions.appendChild(edit)
     actions.appendChild(del)
     const trans = document.createElement('div')
@@ -476,6 +481,18 @@ function renderSessions() {
     if (s.transcript) card.appendChild(trans)
     list.appendChild(card)
   })
+}
+function viewSession(i) {
+  const s = state.sessions[i]
+  const dt = new Date(s.date + 'T' + s.time)
+  qs('#viewTitle').textContent = s.topic
+  qs('#viewMeta').textContent = dt.toLocaleString()
+  qs('#viewDesc').textContent = s.description
+  const urlEl = qs('#viewUrl')
+  urlEl.href = s.url || '#'
+  urlEl.style.display = s.url ? '' : 'none'
+  qs('#viewTrans').textContent = s.transcript || ''
+  qs('#viewSessionModal').showModal()
 }
 function editSession(i) {
   const s = state.sessions[i]
@@ -530,11 +547,37 @@ function toggleTheme() {
   if (t) document.documentElement.setAttribute('data-theme', t)
   else document.documentElement.removeAttribute('data-theme')
 }
+function runLoginTransition() {
+  const card = qs('#login .login-card')
+  const btn = qs('#loginGo')
+  if (btn) {
+    btn.classList.add('loading')
+    btn.textContent = 'Opening…'
+    btn.setAttribute('disabled', 'true')
+  }
+  if (card) card.classList.add('opening')
+  setTimeout(() => {
+    store.set('user', 'Avengers')
+    goto('mode')
+  }, 900)
+}
 function parallax(e) {
   const x = (e.clientX / window.innerWidth - 0.5) * 40
   const y = (e.clientY / window.innerHeight - 0.5) * 40
   document.documentElement.style.setProperty('--parallaxX', x.toFixed(2))
   document.documentElement.style.setProperty('--parallaxY', y.toFixed(2))
+  qsa('.mascot').forEach(m => {
+    const r = m.getBoundingClientRect()
+    const cx = r.left + r.width / 2
+    const cy = r.top + r.height / 2
+    const dx = e.clientX - cx
+    const dy = e.clientY - cy
+    const max = 6
+    const ex = Math.max(-max, Math.min(max, dx / 20))
+    const ey = Math.max(-max, Math.min(max, dy / 20))
+    m.style.setProperty('--eyeX', ex + 'px')
+    m.style.setProperty('--eyeY', ey + 'px')
+  })
 }
 function init() {
   renderTopics()
@@ -566,12 +609,35 @@ function init() {
   if (cancelCheck) cancelCheck.addEventListener('click', () => {
     qs('#newChecklistModal').close()
   })
+  const closeView = qs('#closeViewModal')
+  if (closeView) closeView.addEventListener('click', () => {
+    qs('#viewSessionModal').close()
+  })
   // Routing buttons
   qsa('[data-goto]').forEach(b => b.addEventListener('click', () => {
     goto(b.getAttribute('data-goto'))
     if (b.getAttribute('data-goto') === 'checklistTopics') renderTopics()
   }))
-  goto('welcome')
+  const known = store.get('user', '')
+  if (known === 'Avengers') goto('mode')
+  else goto('login')
   updateHeaderVisibility()
+  updateMascotVisibility()
+  const li = qs('#loginInput')
+  const lg = qs('#loginGo')
+  if (li && lg) {
+    const check = () => {
+      const ok = li.value.trim().toLowerCase() === 'avengers'
+      lg.style.display = ok ? '' : 'none'
+    }
+    li.addEventListener('input', check)
+    li.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const ok = li.value.trim().toLowerCase() === 'avengers'
+        if (ok) runLoginTransition()
+      }
+    })
+    lg.addEventListener('click', runLoginTransition)
+  }
 }
 document.addEventListener('DOMContentLoaded', init)

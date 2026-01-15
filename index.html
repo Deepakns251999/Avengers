@@ -29,12 +29,45 @@
       </div>
     </header>
     <main class="container">
-      <section id="welcome" class="panel active">
+      <section id="login" class="panel active">
+        <div class="login-card">
+          <div class="login-left">
+            <h2 class="card-title">Sign in</h2>
+            <div class="muted">Enter the passphrase to continue</div>
+            <div class="form" style="margin-top:12px">
+              <div class="field">
+                <label>Passphrase</label>
+                <input type="text" id="loginInput" placeholder="Type Avengers">
+              </div>
+              <div class="row">
+                <button id="loginGo" class="btn primary" style="display:none">You are allowed</button>
+              </div>
+            </div>
+          </div>
+          <div class="login-right">
+            <div class="lock">
+              <div class="lock-shield"></div>
+              <div class="lock-keyhole"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="welcome" class="panel">
         <div class="hero">
-          <div class="hero-logo">A</div>
-          <h1 class="hero-title">Avengers</h1>
+          <div class="hero-logo orbit">A</div>
+          <h1 class="hero-title glow">Avengers</h1>
           <p class="hero-sub">Your code doesn’t have to be perfect. It just has to be better than yesterday.</p>
+          <div class="hero-badges">
+            <div class="badge">✓ Checklist Ready</div>
+            <div class="badge">🎥 KT Sessions</div>
+          </div>
           <button class="btn cta" data-goto="mode">Get Started</button>
+          <div class="hero-footer">
+            <div class="rail">
+              <span class="chip">Experience is the name everyone gives to their mistakes</span>
+            </div>
+            <div class="scroll-indicator">▼</div>
+          </div>
         </div>
       </section>
       <section id="mode" class="panel">
@@ -120,6 +153,29 @@
         </div>
       </section>
     </main>
+    <div class="mascot-group" aria-hidden="true">
+      <div class="mascot big pink">
+        <div class="face">
+          <div class="eye left"></div>
+          <div class="eye right"></div>
+          <div class="mouth"></div>
+        </div>
+      </div>
+      <div class="mascot mid blue">
+        <div class="face">
+          <div class="eye left"></div>
+          <div class="eye right"></div>
+          <div class="mouth"></div>
+        </div>
+      </div>
+      <div class="mascot small gold">
+        <div class="face">
+          <div class="eye left"></div>
+          <div class="eye right"></div>
+          <div class="mouth"></div>
+        </div>
+      </div>
+    </div>
     <dialog id="newChecklistModal" class="modal">
     <div class="modal-content card">
       <h3 class="card-title">Add Checklist Heading</h3>
@@ -135,6 +191,23 @@
         <div class="row actions-right">
           <button id="cancelCheckModal" class="btn ghost">Cancel</button>
           <button id="saveCheckModal" class="btn primary">Add Heading</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+  <dialog id="viewSessionModal" class="modal">
+    <div class="modal-content card">
+      <h3 class="card-title" id="viewTitle"></h3>
+      <div class="form">
+        <div class="muted" id="viewMeta"></div>
+        <div id="viewDesc" class="muted"></div>
+        <div class="row">
+          <a id="viewUrl" class="btn primary" target="_blank" rel="noopener noreferrer">Open URL</a>
+          <button id="closeViewModal" class="btn ghost" type="button">Close</button>
+        </div>
+        <div class="field">
+          <label>Transcript</label>
+          <div id="viewTrans" class="muted"></div>
         </div>
       </div>
     </div>
